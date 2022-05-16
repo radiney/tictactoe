@@ -31,17 +31,64 @@ class ViewController: UIViewController {
     
     var Circle = "O"
     var Ex = "X"
+    var board = [UIButton]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        initBoard()
+    }
+    
+    func initBoard(){
+        board.append(btnA1)
+        board.append(btnA2)
+        board.append(btnA3)
+        board.append(btnB1)
+        board.append(btnB2)
+        board.append(btnB3)
+        board.append(btnC1)
+        board.append(btnC2)
+        board.append(btnC3)
     }
 
     @IBAction func tapped(_ sender: UIButton) {
+        addToBoard(sender)
+        
     }
     
+    func resultAlert(title: String)
+        {
+            
+        }
+    
+    func fullBoard() -> Bool
+        {
+            for button in board
+            {
+                if button.title(for: .normal) == nil
+                {
+                    return false
+                }
+            }
+            return true
+        }
+    
     func addToBoard(_ sender: UIButton){
-        
+        if (sender.title(for: .normal) == nil)
+        {
+            if(currentTurn == Turn.Circle)
+            {
+                sender.setTitle(Circle, for: .normal)
+                currentTurn = Turn.Ex
+                lblTurn.text = Ex
+            } else if(currentTurn == Turn.Ex)
+                {
+                sender.setTitle(Ex, for: .normal)
+                currentTurn = Turn.Circle
+                lblTurn.text = Ex
+                }
+                sender.isEnabled = false
+        }
+    
     }
     
 }

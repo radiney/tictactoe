@@ -10,9 +10,9 @@ import UIKit
 class ViewController: UIViewController {
     
     enum Turn {
-            case Circle
-            case Ex
-        }
+        case Circle
+        case Ex
+    }
     
     @IBOutlet weak var lblTurn: UILabel!
     @IBOutlet weak var btnA1: UIButton!
@@ -26,11 +26,11 @@ class ViewController: UIViewController {
     @IBOutlet weak var btnA3: UIButton!
     
     
-    var firstTurn = Turn.Circle
-    var currentTurn = Turn.Circle
+    var firstTurn = Turn.Ex
+    var currentTurn = Turn.Ex
     
-    var Circle = "O"
-    var Ex = "X"
+    var CIRCLE = "O"
+    var EX = "X"
     var board = [UIButton]()
     
     override func viewDidLoad() {
@@ -49,47 +49,62 @@ class ViewController: UIViewController {
         board.append(btnC2)
         board.append(btnC3)
     }
-
+    
     @IBAction func tapped(_ sender: UIButton) {
         addToBoard(sender)
+        if (fullBoard()) {
+            resultAlert(title: "Draw")
+        }
         
     }
     
-    func resultAlert(title: String)
-        {
-            
-        }
+    func resultAlert(title: String) {
+        let ac = UIAlertController(title: title, message: nil, preferredStyle: .alert)
+        ac.addAction(UIAlertAction(title: "Reset", style: .default, handler: { _ in
+            self.resetBoard()
+        }))
+        self.present(ac, animated: true)
+    }
     
-    func fullBoard() -> Bool
-        {
-            for button in board
-            {
-                if button.title(for: .normal) == nil
-                {
-                    return false
-                }
+    func resetBoard() {
+        for button in board {
+            button.setTitle(nil, for: .normal)
+            button.isEnabled = true
+            if (firstTurn == Turn.Circle) {
+                firstTurn = Turn.Ex
+                lblTurn.text = EX
+            } else if (firstTurn == Turn.Ex) {
+                firstTurn = Turn.Circle
+                lblTurn.text = CIRCLE
             }
-            return true
+            currentTurn = firstTurn
         }
+    }
+    
+    func fullBoard() -> Bool {
+        for button in board {
+            if button.title(for: .normal) == nil {
+                return false
+            }
+        }
+        return true
+    }
     
     func addToBoard(_ sender: UIButton){
-        if (sender.title(for: .normal) == nil)
-        {
-            if(currentTurn == Turn.Circle)
-            {
-                sender.setTitle(Circle, for: .normal)
+        if (sender.title(for: .normal) == nil){
+            if(currentTurn == Turn.Circle){
+                sender.setTitle(CIRCLE, for: .normal)
+                //sender.setBackgroundImage(UIImage(named: "spiderman"), for: .normal)
                 currentTurn = Turn.Ex
-                lblTurn.text = Ex
-            } else if(currentTurn == Turn.Ex)
-                {
-                sender.setTitle(Ex, for: .normal)
+                lblTurn.text = EX
+            } else if (currentTurn == Turn.Ex) {
+                sender.setTitle(EX, for: .normal)
                 currentTurn = Turn.Circle
-                lblTurn.text = Ex
-                }
-                sender.isEnabled = false
+                lblTurn.text = CIRCLE
+            }
+            sender.isEnabled = false
         }
-    
+        
     }
     
 }
-
